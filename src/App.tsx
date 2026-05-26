@@ -75,7 +75,7 @@ const Header = () => {
           <a href="#nosotros" className="hover:text-[#ccff00] transition-colors">¿Por qué nosotros?</a>
           <a href="#contacto" className="hover:text-[#ccff00] transition-colors">Contacto</a>
           <a href="#ubicacion" className="hover:text-[#00f2ff] transition-colors flex items-center gap-1">
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
             Ubicación
           </a>
         </div>
@@ -96,7 +96,7 @@ const Header = () => {
           <a href="#nosotros" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>¿Por qué nosotros?</a>
           <a href="#contacto" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Contacto</a>
           <a href="#ubicacion" className="text-xl font-bold text-[#00f2ff] flex items-center gap-2" onClick={() => setIsOpen(false)}>
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>
             Ubicación
           </a>
         </div>
@@ -551,7 +551,7 @@ const PricingTable = () => {
     {
       id: "webpro-precio",
       name: 'Combo "Mi Negocio en Internet" (Landing Page)',
-      price: "$550.000",
+      price: "$350.000",
       description: "Tu marca disponible en Google las 24 horas del día.",
       features: [
         { title: "Landing Page de Alto Impacto", desc: "Diseñamos una página moderna y profesional enfocada en que tus clientes te contacten de inmediato." },
