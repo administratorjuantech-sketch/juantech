@@ -530,7 +530,7 @@ const PricingTable = () => {
     {
       id: "formateo-precio",
       name: 'Combo "Computador Como Nuevo"',
-      price: "$90.000",
+      price: "$99.999",
       description: "La solución definitiva para que tu equipo recupere su velocidad original.",
       features: [
         { title: "Formateo y Limpieza Profunda", desc: "Eliminamos virus, archivos basura y errores del sistema para un inicio desde cero." },
@@ -551,7 +551,7 @@ const PricingTable = () => {
     {
       id: "webpro-precio",
       name: 'Combo "Mi Negocio en Internet" (Landing Page)',
-      price: "$350.000",
+      price: "$349.999",
       description: "Tu marca disponible en Google las 24 horas del día.",
       features: [
         { title: "Landing Page de Alto Impacto", desc: "Diseñamos una página moderna y profesional enfocada en que tus clientes te contacten de inmediato." },
