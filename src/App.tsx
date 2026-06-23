@@ -105,23 +105,69 @@ const Header = () => {
   );
 };
 
+// --- RobustVideoCard Component ---
+const RobustVideoCard = ({ src }: { src: string }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    const video = container.querySelector('video');
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    
+    const attemptPlay = () => {
+      video.play().catch(() => {});
+    };
+    
+    video.addEventListener('canplay', attemptPlay);
+    attemptPlay();
+
+    const handleEnter = () => {
+      video.muted = false;
+      video.play().catch(() => {
+        // Si el navegador bloquea el audio por falta de clics previos, lo mantenemos reproduciéndose en silencio
+        video.muted = true;
+        video.play().catch(() => {});
+      });
+    };
+
+    const handleLeave = () => {
+      video.muted = true;
+    };
+
+    container.addEventListener('mouseenter', handleEnter);
+    container.addEventListener('mouseleave', handleLeave);
+
+    return () => {
+      video.removeEventListener('canplay', attemptPlay);
+      container.removeEventListener('mouseenter', handleEnter);
+      container.removeEventListener('mouseleave', handleLeave);
+    };
+  }, []);
+
+  return (
+    <div ref={containerRef} className="w-full h-full flex items-center justify-center">
+      <div dangerouslySetInnerHTML={{ __html: `
+        <video 
+          src="${src}" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          preload="auto" 
+          style="width: 100%; height: auto; border-radius: 0.75rem; object-fit: contain;"
+        ></video>
+      `}} className="w-full" />
+    </div>
+  );
+};
+
 // --- Hero Component ---
 const Hero = () => {
-  const video1Ref = useRef<HTMLVideoElement>(null);
-  const video2Ref = useRef<HTMLVideoElement>(null);
-
-  const handleMouseEnter = (ref: React.RefObject<HTMLVideoElement | null>) => {
-    if (ref.current) {
-      ref.current.muted = false;
-    }
-  };
-
-  const handleMouseLeave = (ref: React.RefObject<HTMLVideoElement | null>) => {
-    if (ref.current) {
-      ref.current.muted = true;
-    }
-  };
-
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0a0a0a] pt-20 pb-10">
       <motion.div
@@ -158,42 +204,26 @@ const Hero = () => {
         {/* Middle Section (The Animations) */}
         <div className="flex flex-col md:flex-row gap-8 justify-center items-center my-10 w-full max-w-5xl mx-auto">
           {/* Card 1 */}
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            onMouseEnter={() => handleMouseEnter(video1Ref)}
-            onMouseLeave={() => handleMouseLeave(video1Ref)}
-            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
-          >
-            <video
-              ref={video1Ref}
-              src="/videos/formateo.mp4"
-              autoPlay
-              loop
-              playsInline
-              muted
-              controls={false}
-              className="w-full h-auto rounded-xl object-contain"
-            />
-          </motion.div>
+          <div className="w-full md:w-1/2 max-w-md">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
+              className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
+            >
+              <RobustVideoCard src="/videos/formateo.mp4" />
+            </motion.div>
+          </div>
 
           {/* Card 2 */}
-          <motion.div
-            whileHover={{ scale: 1.03 }}
-            onMouseEnter={() => handleMouseEnter(video2Ref)}
-            onMouseLeave={() => handleMouseLeave(video2Ref)}
-            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
-          >
-            <video
-              ref={video2Ref}
-              src="/videos/paginasweb.mp4"
-              autoPlay
-              loop
-              playsInline
-              muted
-              controls={false}
-              className="w-full h-auto rounded-xl object-contain"
-            />
-          </motion.div>
+          <div className="w-full md:w-1/2 max-w-md">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
+              className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
+            >
+              <RobustVideoCard src="/videos/paginasweb.mp4" />
+            </motion.div>
+          </div>
         </div>
 
         {/* Bottom Section (Actions) */}
