@@ -106,42 +106,109 @@ const Header = () => {
 };
 
 // --- Hero Component ---
-const Hero = () => (
-  <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0a0a0a] pt-20">
-    <motion.div
-      animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3], x: [0, 50, 0], y: [0, -50, 0] }}
-      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      className="absolute top-1/4 -left-20 w-72 h-72 bg-[#00f2ff]/10 rounded-full blur-[120px]"
-    />
-    <motion.div
-      animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2], x: [0, -50, 0], y: [0, 50, 0] }}
-      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-      className="absolute bottom-1/4 -right-20 w-72 h-72 bg-[#ccff00]/10 rounded-full blur-[120px]"
-    />
-    <div className="container mx-auto px-6 relative z-10 text-center">
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-        <span className="inline-block py-1 px-4 rounded-full border border-[#00f2ff]/30 text-[#00f2ff] text-sm font-medium mb-6">Tecnología al Siguiente Nivel</span>
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-8 leading-tight uppercase flex flex-col items-center">
-          <GlitchText text="TECNOLOGÍA QUE" autoGlitch={true} />
-          <GlitchText
-            text="IMPULSA TU VIDA Y TU NEGOCIO"
-            autoGlitch={true}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2ff] to-[#ccff00]"
-            textClassName="bg-clip-text bg-gradient-to-r from-[#00f2ff] to-[#ccff00] text-transparent"
-          />
-        </h1>
-        <p className="max-w-3xl mx-auto text-gray-400 text-lg md:text-xl mb-10 leading-relaxed font-medium">
-          Servicio técnico profesional y soluciones web en Bogotá y Colombia. <br className="hidden md:block" />
-          Sin complicaciones, sin lenguaje enredado y con resultados garantizados.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <a href="#servicios" className="px-8 py-4 bg-[#00f2ff] text-black font-bold rounded-xl w-full sm:w-auto text-center hover:scale-105 transition-all">Comenzar Ahora</a>
-          <a href="#contacto" className="px-8 py-4 bg-transparent border border-white/20 text-white font-bold rounded-xl w-full sm:w-auto flex items-center justify-center hover:bg-white/5 transition-all">Contáctanos</a>
+const Hero = () => {
+  const video1Ref = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+
+  const handleMouseEnter = (ref: React.RefObject<HTMLVideoElement>) => {
+    if (ref.current) {
+      ref.current.muted = false;
+    }
+  };
+
+  const handleMouseLeave = (ref: React.RefObject<HTMLVideoElement>) => {
+    if (ref.current) {
+      ref.current.muted = true;
+    }
+  };
+
+  return (
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0a0a0a] pt-20 pb-10">
+      <motion.div
+        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3], x: [0, 50, 0], y: [0, -50, 0] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/4 -left-20 w-72 h-72 bg-[#00f2ff]/10 rounded-full blur-[120px]"
+      />
+      <motion.div
+        animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2], x: [0, -50, 0], y: [0, 50, 0] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-1/4 -right-20 w-72 h-72 bg-[#ccff00]/10 rounded-full blur-[120px]"
+      />
+      <div className="container mx-auto px-6 relative z-10 flex flex-col items-center justify-center text-center w-full">
+        {/* Top Section */}
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex flex-col items-center w-full max-w-4xl mx-auto">
+          <span className="inline-block py-1 px-4 rounded-full border border-[#00f2ff]/30 text-[#00f2ff] text-sm font-medium mb-6">
+            Tecnología al Siguiente Nivel
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6 leading-tight uppercase flex flex-col items-center">
+            <GlitchText text="TECNOLOGÍA QUE" autoGlitch={true} />
+            <GlitchText
+              text="IMPULSA TU VIDA Y TU NEGOCIO"
+              autoGlitch={true}
+              className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2ff] to-[#ccff00]"
+              textClassName="bg-clip-text bg-gradient-to-r from-[#00f2ff] to-[#ccff00] text-transparent"
+            />
+          </h1>
+          <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
+            Servicio técnico profesional y soluciones web en Bogotá y Colombia. <br className="hidden md:block" />
+            Sin complicaciones, sin lenguaje enredado y con resultados garantizados.
+          </p>
+        </motion.div>
+
+        {/* Middle Section (The Animations) */}
+        <div className="flex flex-col md:flex-row gap-8 justify-center items-center my-10 w-full max-w-5xl mx-auto">
+          {/* Card 1 */}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            onMouseEnter={() => handleMouseEnter(video1Ref)}
+            onMouseLeave={() => handleMouseLeave(video1Ref)}
+            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border border-white/5 shadow-[0_0_25px_rgba(204,255,0,0.15)] overflow-hidden"
+          >
+            <video
+              ref={video1Ref}
+              src="/videos/Formateo.mp4"
+              autoPlay
+              loop
+              playsInline
+              muted
+              controls={false}
+              className="w-full h-auto rounded-xl object-contain"
+            />
+          </motion.div>
+
+          {/* Card 2 */}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            onMouseEnter={() => handleMouseEnter(video2Ref)}
+            onMouseLeave={() => handleMouseLeave(video2Ref)}
+            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border border-white/5 shadow-[0_0_25px_rgba(0,242,255,0.15)] overflow-hidden"
+          >
+            <video
+              ref={video2Ref}
+              src="/videos/PaginasWeb.mp4"
+              autoPlay
+              loop
+              playsInline
+              muted
+              controls={false}
+              className="w-full h-auto rounded-xl object-contain"
+            />
+          </motion.div>
         </div>
-      </motion.div>
-    </div>
-  </section>
-);
+
+        {/* Bottom Section (Actions) */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-2">
+          <a href="#servicios" className="px-8 py-4 bg-[#00f2ff] text-black font-bold rounded-xl w-full sm:w-auto text-center hover:scale-105 transition-all">
+            Comenzar Ahora
+          </a>
+          <a href="#contacto" className="px-8 py-4 bg-transparent border border-white/20 text-white font-bold rounded-xl w-full sm:w-auto flex items-center justify-center hover:bg-white/5 transition-all">
+            Contáctanos
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 // --- WhyUs Component ---
 const WhyUs = () => {
