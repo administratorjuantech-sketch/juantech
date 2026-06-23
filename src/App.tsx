@@ -162,7 +162,7 @@ const Hero = () => {
             whileHover={{ scale: 1.03 }}
             onMouseEnter={() => handleMouseEnter(video1Ref)}
             onMouseLeave={() => handleMouseLeave(video1Ref)}
-            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border border-white/5 shadow-[0_0_25px_rgba(204,255,0,0.15)] overflow-hidden"
+            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
           >
             <video
               ref={video1Ref}
@@ -181,7 +181,7 @@ const Hero = () => {
             whileHover={{ scale: 1.03 }}
             onMouseEnter={() => handleMouseEnter(video2Ref)}
             onMouseLeave={() => handleMouseLeave(video2Ref)}
-            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border border-white/5 shadow-[0_0_25px_rgba(0,242,255,0.15)] overflow-hidden"
+            className="w-full md:w-1/2 max-w-md bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
           >
             <video
               ref={video2Ref}
