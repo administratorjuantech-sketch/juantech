@@ -110,13 +110,13 @@ const Hero = () => {
   const video1Ref = useRef<HTMLVideoElement>(null);
   const video2Ref = useRef<HTMLVideoElement>(null);
 
-  const handleMouseEnter = (ref: React.RefObject<HTMLVideoElement>) => {
+  const handleMouseEnter = (ref: React.RefObject<HTMLVideoElement | null>) => {
     if (ref.current) {
       ref.current.muted = false;
     }
   };
 
-  const handleMouseLeave = (ref: React.RefObject<HTMLVideoElement>) => {
+  const handleMouseLeave = (ref: React.RefObject<HTMLVideoElement | null>) => {
     if (ref.current) {
       ref.current.muted = true;
     }
