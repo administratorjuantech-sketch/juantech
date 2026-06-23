@@ -166,7 +166,7 @@ const Hero = () => {
           >
             <video
               ref={video1Ref}
-              src="/videos/Formateo.mp4"
+              src="/videos/formateo.mp4"
               autoPlay
               loop
               playsInline
@@ -185,7 +185,7 @@ const Hero = () => {
           >
             <video
               ref={video2Ref}
-              src="/videos/PaginasWeb.mp4"
+              src="/videos/paginasweb.mp4"
               autoPlay
               loop
               playsInline
