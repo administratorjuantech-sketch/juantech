@@ -2,9 +2,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Menu, X, Mail, MessageSquare, Send, User, Phone, Info, ChevronLeft, ChevronRight, ShieldCheck, Zap, HeartHandshake, MessageCircle } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
-import logo from './image/LogoSinInfo.png';
-import comboFormateo from './image/ComboFormateo.png';
-import comboLanding from './image/ComboLandingPage.png';
+import logo from './image/LogoSinInfo.webp';
+import comboFormateo from './image/ComboFormateo.webp';
+import comboLanding from './image/ComboLandingPage.webp';
 
 // --- Header Component ---
 const Header = () => {
@@ -12,11 +12,11 @@ const Header = () => {
   const [showServices, setShowServices] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5" style={{ transform: 'translateZ(0)', WebkitBackdropFilter: 'blur(20px)' }}>
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <a href="#" className="flex items-center gap-4 group">
           <div className="w-20 h-20 flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
-            <img src={logo} alt="JuanTech Logo" className="w-full h-full object-contain scale-125" />
+            <img src={logo} alt="JuanTech Logo" className="w-full h-full object-contain scale-125" decoding="async" fetchPriority="high" width="80" height="80" />
           </div>
           <span className="text-3xl font-black tracking-tighter text-white transition-colors group-hover:text-[#ccff00] flex items-center">
             <GlitchText text="JUAN" autoGlitch={true} />
@@ -120,19 +120,27 @@ const RobustVideoCard = ({ src }: { src: string }) => {
     video.muted = true;
     
     const attemptPlay = () => {
-      video.play().catch(() => {});
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
     };
     
-    video.addEventListener('canplay', attemptPlay);
-    attemptPlay();
+    if (video.readyState >= 2) {
+      attemptPlay();
+    } else {
+      video.addEventListener('loadeddata', attemptPlay, { once: true });
+    }
 
     const handleEnter = () => {
       video.muted = false;
-      video.play().catch(() => {
-        // Si el navegador bloquea el audio por falta de clics previos, lo mantenemos reproduciéndose en silencio
-        video.muted = true;
-        video.play().catch(() => {});
-      });
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          video.muted = true;
+          video.play().catch(() => {});
+        });
+      }
     };
 
     const handleLeave = () => {
@@ -143,7 +151,7 @@ const RobustVideoCard = ({ src }: { src: string }) => {
     container.addEventListener('mouseleave', handleLeave);
 
     return () => {
-      video.removeEventListener('canplay', attemptPlay);
+      video.removeEventListener('loadeddata', attemptPlay);
       container.removeEventListener('mouseenter', handleEnter);
       container.removeEventListener('mouseleave', handleLeave);
     };
@@ -158,8 +166,9 @@ const RobustVideoCard = ({ src }: { src: string }) => {
           loop 
           muted 
           playsinline 
-          preload="auto" 
-          style="width: 100%; height: auto; border-radius: 0.75rem; object-fit: contain;"
+          webkit-playsinline="true"
+          preload="metadata" 
+          style="width: 100%; height: auto; border-radius: 0.75rem; object-fit: contain; transform: translateZ(0);"
         ></video>
       `}} className="w-full" />
     </div>
@@ -173,12 +182,14 @@ const Hero = () => {
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3], x: [0, 50, 0], y: [0, -50, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 -left-20 w-72 h-72 bg-[#00f2ff]/10 rounded-full blur-[120px]"
+        className="absolute top-1/4 -left-20 w-72 h-72 bg-[#00f2ff]/10 rounded-full blur-[120px] pointer-events-none"
+        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
       />
       <motion.div
         animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2], x: [0, -50, 0], y: [0, 50, 0] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-1/4 -right-20 w-72 h-72 bg-[#ccff00]/10 rounded-full blur-[120px]"
+        className="absolute bottom-1/4 -right-20 w-72 h-72 bg-[#ccff00]/10 rounded-full blur-[120px] pointer-events-none"
+        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
       />
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center justify-center text-center w-full">
         {/* Top Section */}
@@ -305,8 +316,9 @@ const BentoServices = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const handleServiceChange = (e: any) => {
-      setCurrentIndex(e.detail);
+    const handleServiceChange = (e: Event) => {
+      const customEvent = e as CustomEvent<number>;
+      setCurrentIndex(customEvent.detail);
     };
     window.addEventListener('changeService', handleServiceChange);
     return () => window.removeEventListener('changeService', handleServiceChange);
@@ -399,7 +411,7 @@ const BentoServices = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {services[currentIndex].marketing.benefits.map((b: any, idx: number) => (
+                      {services[currentIndex].marketing.benefits.map((b: { title: string; desc: string }, idx: number) => (
                         <div key={idx} className="space-y-1">
                           <p className="text-[#00f2ff] font-black text-sm uppercase tracking-wider">{b.title}</p>
                           <p className="text-gray-400 text-sm leading-relaxed">{b.desc}</p>
@@ -418,6 +430,8 @@ const BentoServices = () => {
                     src={services[currentIndex].image}
                     alt={services[currentIndex].title}
                     className="max-h-[400px] md:max-h-[500px] w-auto object-contain"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
 
@@ -696,27 +710,31 @@ const PricingTable = () => {
               </div>
 
               <div className="grid grid-cols-1 gap-6 mb-10">
-                {plan.features.map((feature: any, i: number) => (
-                  <div key={i} className="flex items-start gap-4 bg-white/5 p-6 rounded-2xl border border-white/5">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#ccff00]/10 flex items-center justify-center mt-1">
-                      <Check className="w-5 h-5 text-[#ccff00]" />
-                    </div>
-                    <div>
-                      <p className="text-[#00f2ff] font-black text-lg uppercase tracking-tight mb-1">
-                        {typeof feature === 'string' ? feature : feature.title}
-                      </p>
-                      {feature.desc && (
-                        <p className="text-gray-400 text-base leading-relaxed">
-                          {feature.desc}
+                {plan.features.map((feature: { title: string; desc?: string } | string, i: number) => {
+                  const title = typeof feature === 'string' ? feature : feature.title;
+                  const desc = typeof feature === 'string' ? undefined : feature.desc;
+                  return (
+                    <div key={i} className="flex items-start gap-4 bg-white/5 p-6 rounded-2xl border border-white/5">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#ccff00]/10 flex items-center justify-center mt-1">
+                        <Check className="w-5 h-5 text-[#ccff00]" />
+                      </div>
+                      <div>
+                        <p className="text-[#00f2ff] font-black text-lg uppercase tracking-tight mb-1">
+                          {title}
                         </p>
-                      )}
+                        {desc && (
+                          <p className="text-gray-400 text-base leading-relaxed">
+                            {desc}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="flex flex-wrap items-center justify-center gap-3 mb-6 mt-2">
-                {plan.badges.map((badge: any, idx: number) => (
+                {plan.badges.map((badge: { icon: React.ReactNode; text: string }, idx: number) => (
                   <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-300">
                     {badge.icon}
                     {badge.text}
@@ -955,7 +973,7 @@ const ContactForm = () => {
               className="bg-[#111] border border-[#ccff00]/30 p-8 md:p-12 rounded-3xl max-w-lg w-full text-center shadow-[0_0_50px_rgba(204,255,0,0.1)]"
             >
               <div className="w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                <img src={logo} alt="Logo" className="w-full h-full object-contain" />
+                <img src={logo} alt="Logo" className="w-full h-full object-contain" loading="lazy" decoding="async" />
               </div>
               <h3 className="text-3xl font-black text-white mb-4">¡MENSAJE RECIBIDO!</h3>
               <p className="text-gray-400 text-lg mb-8 leading-relaxed">
@@ -982,7 +1000,7 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
       <div className="flex flex-col items-center md:items-start gap-4">
         <div className="w-32 h-32 flex items-center justify-center overflow-hidden">
-          <img src={logo} alt="JuanTech" className="w-full h-full object-contain" />
+          <img src={logo} alt="JuanTech" className="w-full h-full object-contain" loading="lazy" decoding="async" />
         </div>
         <span className="text-2xl font-black text-white tracking-tighter">JUAN<span className="text-[#00f2ff]">TECH</span></span>
         <p className="text-gray-500 text-sm font-medium">Bogotá, Colombia 🇨🇴</p>
@@ -1136,8 +1154,16 @@ const ParticleTrail = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
+    // Only activate cursor trail on devices with fine pointer (mouse/desktop) and viewport >= 768px
+    const media = window.matchMedia('(pointer: fine) and (min-width: 768px)');
+    if (!media.matches) {
+      return;
+    }
+    setIsEnabled(true);
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -1146,7 +1172,7 @@ const ParticleTrail = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let particlesArray: Particle[] = [];
+    const particlesArray: Particle[] = [];
     const mouse = { x: -100, y: -100 };
 
     class Particle {
@@ -1221,6 +1247,7 @@ const ParticleTrail = () => {
     window.addEventListener('mouseover', handleMouseOver);
     window.addEventListener('resize', handleResize);
 
+    let animationFrameId: number;
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < particlesArray.length; i++) {
@@ -1232,17 +1259,20 @@ const ParticleTrail = () => {
           i--;
         }
       }
-      requestAnimationFrame(animate);
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  if (!isEnabled) return null;
 
   return (
     <>
