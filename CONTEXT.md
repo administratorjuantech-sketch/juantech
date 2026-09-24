@@ -26,6 +26,9 @@ La interfaz es oscura, futurista y de aspecto premium, inspirada en las últimas
 * **Efectos de Brillo (Glows):** Sombras difusas y sutiles alrededor de elementos clave (`glow-cyan`, `glow-lime`).
 * **Degradados:** Combinación suave desde `#00f2ff` hasta `#ccff00`.
 * **Interactividad:** Efectos *hover* dinámicos con escala suave (`scale-105`) y transiciones de color de borde.
+* **Cursor y Estela de Partículas (`ParticleTrail`):** Canvas reactivo en escritorio (`hidden md:block`) que dibuja partículas neón dinámicas y un cursor suavizado que reacciona a los elementos interactivos, deshabilitado de forma limpia en móviles para optimizar el rendimiento táctil.
+* **Efecto Glitch Cyberpunk (`GlitchText`):** Animación tipográfica con aberración cromática neón (`#ff00c1` y `#00f2ff`) implementada en CSS puro con soporte para auto-glitch periódico y activación por hover.
+* **Reproductor de Video Optimizado (`RobustVideoCard`):** Tarjeta de video interactiva que reproduce con audio en hover (PC) o click/toque (móvil). Incluye integración de portadas WebP (`formateo-poster.webp`, `paginasweb-poster.webp`) en el atributo `poster` para garantizar que en navegadores móviles (Chrome/Safari) nunca aparezcan recuadros negros antes de la interacción.
 
 ---
 
@@ -55,15 +58,18 @@ La interfaz es oscura, futurista y de aspecto premium, inspirada en las últimas
 ## 🛠️ 5. Arquitectura del Código (`src/App.tsx`)
 El archivo principal contiene una estructura modular por componentes autocontenidos:
 
-1. **`Header`**: Menú de navegación fijo con efecto backdrop-blur, dropdown animado para los servicios y menú responsive lateral para dispositivos móviles.
-2. **`Hero`**: Sección principal con esferas difusas de color en el fondo, títulos grandes de alto impacto y llamadas a la acción directas.
-3. **`WhyUs`**: Cuadrícula dinámica que muestra los pilares de valor (Sin tecnicismos, Seguridad, Rapidez, Soporte).
-4. **`BentoServices`**: Carrusel interactivo y responsivo gobernado por eventos personalizados (`changeService`) para cambiar de manera fluida entre los dos servicios estrella.
-5. **`PricingTable`**: Tabla de precios detallada con bordes de color neón interactivos y desglose de características por servicio.
-6. **`FAQ`**: Acordeón dinámico con preguntas frecuentes (Tiempos de entrega, políticas de pago y cobertura de domicilios).
-7. **`ContactForm`**: Formulario interactivo conectado a EmailJS con validación y ventana emergente (*modal*) de agradecimiento.
-8. **`Footer`**: Datos oficiales de contacto, logo y redes de comunicación directa.
-9. **`FloatingWhatsApp`**: Botón flotante persistente en forma de píldora en la parte inferior izquierda con el logo oficial, el texto "WhatsApp", una sutil animación de pulso y un tooltip inteligente en hover.
+1. **`ParticleTrail`**: Canvas de fondo interactivo para escritorio que genera estela de partículas neón y cursor fluido que reacciona sobre botones y enlaces.
+2. **`Header`**: Menú de navegación fijo con efecto backdrop-blur, dropdown animado para los servicios y menú responsive lateral para dispositivos móviles. Incluye logo y marca animada con `GlitchText`.
+3. **`Hero`**: Sección principal con esferas difusas de fondo, llamadas a la acción directas y tarjetas de demostración interactiva (`RobustVideoCard`) con audio y portadas WebP optimizadas.
+4. **`WhyUs`**: Cuadrícula dinámica que muestra los pilares de valor (Sin tecnicismos, Seguridad, Rapidez, Soporte).
+5. **`BentoServices`**: Carrusel interactivo y responsivo gobernado por eventos personalizados (`changeService`) para cambiar de manera fluida entre los dos servicios estrella.
+6. **`Timeline` ("Cómo Trabajamos")**: Sección de proceso de 4 pasos cronológicos (Contacto inicial, Diagnóstico y cotización clara, Ejecución y respaldo seguro, Entrega y soporte) con línea guía neón iluminada al hacer scroll.
+7. **`PricingTable`**: Tabla de precios detallada con bordes de color neón interactivos y desglose de características por servicio.
+8. **`FAQ`**: Acordeón dinámico con preguntas frecuentes (Tiempos de entrega, políticas de pago y cobertura de domicilios).
+9. **`ContactForm`**: Formulario interactivo conectado a EmailJS con validación y ventana emergente (*modal*) de agradecimiento.
+10. **`Footer`**: Datos oficiales de contacto, logo y redes de comunicación directa.
+11. **`FloatingWhatsApp`**: Botón flotante persistente en forma de píldora en la parte inferior izquierda con el logo oficial, el texto "WhatsApp", una sutil animación de pulso y un tooltip inteligente en hover.
+12. **`GlitchText`**: Utilidad tipográfica de estética cyberpunk reutilizada en títulos y marcas con variantes de glitch cíclico o reactivo a hover.
 
 ---
 
