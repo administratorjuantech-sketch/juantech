@@ -3,8 +3,8 @@ import { Check, Menu, X, Mail, MessageSquare, Send, User, Phone, Info, ChevronLe
 import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import logo from './image/LogoSinInfo.webp';
-import comboFormateo from './image/ComboFormateo.webp';
-import comboLanding from './image/ComboLandingPage.webp';
+import comboFormateo from './image/ComboFormateoNew3.webp';
+import comboLanding from './image/ComboLandingPageNew2.webp';
 
 // --- Header Component ---
 const Header = () => {
@@ -1154,15 +1154,12 @@ const ParticleTrail = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
-  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
-    // Only activate cursor trail on devices with fine pointer (mouse/desktop) and viewport >= 768px
-    const media = window.matchMedia('(pointer: fine) and (min-width: 768px)');
-    if (!media.matches) {
+    // Only run particle loop on desktop / tablet screens (>= 768px), preventing mobile battery drain
+    if (window.innerWidth < 768) {
       return;
     }
-    setIsEnabled(true);
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -1239,6 +1236,7 @@ const ParticleTrail = () => {
     };
 
     const handleResize = () => {
+      if (window.innerWidth < 768) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
@@ -1271,8 +1269,6 @@ const ParticleTrail = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  if (!isEnabled) return null;
 
   return (
     <>
