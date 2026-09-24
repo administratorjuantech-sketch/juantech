@@ -45,13 +45,13 @@ La interfaz es oscura, futurista y de aspecto premium, inspirada en las últimas
 
 ### A. Combo "Computador Como Nuevo"
 * **ID Técnico:** `servicio-formateo` / `formateo-precio`
-* **Precio:** `$90.000 COP`
-* **Descripción:** Solución de formateo, limpieza profunda física y de software, instalación limpia del sistema operativo (Windows reciente), suite completa de Office y configuración de drivers para restablecer la velocidad original del PC. Cuentas con 15 días de soporte post-servicio.
+* **Precio:** `$99.999 COP`
+* **Descripción:** Solución de formateo, limpieza profunda física y de software, instalación limpia del sistema operativo (Windows reciente), suite completa de Office y configuración de drivers para restablecer la velocidad original del PC. Cuentas con 15 días de soporte post-servicio. Integrado directamente en `BentoServices` con tarjeta directa y modal de detalles completos del plan.
 
 ### B. Combo "Mi Negocio en Internet" (Landing Page)
 * **ID Técnico:** `servicio-webpro` / `webpro-precio`
-* **Precio:** `$550.000 COP`
-* **Descripción:** Desarrollo de una landing page premium, ultra-rápida, con diseño multi-pantalla responsivo, optimización SEO para buscadores locales, configuración de dominio (`.com`) y hosting por 1 año, botón integrado a WhatsApp y 1 mes de soporte post-entrega.
+* **Precio:** `$349.999 COP` (en landing) / `$550.000 COP`
+* **Descripción:** Desarrollo de una landing page premium, ultra-rápida, con diseño multi-pantalla responsivo, optimización SEO para buscadores locales, configuración de dominio (`.com`) y hosting por 1 año, botón integrado a WhatsApp y 1 mes de soporte post-entrega. Presentado en `PricingTable`.
 
 ---
 
@@ -62,14 +62,13 @@ El archivo principal contiene una estructura modular por componentes autoconteni
 2. **`Header`**: Menú de navegación fijo con efecto backdrop-blur, dropdown animado para los servicios y menú responsive lateral para dispositivos móviles. Incluye logo y marca animada con `GlitchText`.
 3. **`Hero`**: Sección principal con esferas difusas de fondo, llamadas a la acción directas y tarjetas de demostración interactiva (`RobustVideoCard`) con audio y portadas WebP optimizadas.
 4. **`WhyUs`**: Cuadrícula dinámica que muestra los pilares de valor (Sin tecnicismos, Seguridad, Rapidez, Soporte).
-5. **`BentoServices`**: Carrusel interactivo y responsivo gobernado por eventos personalizados (`changeService`) para cambiar de manera fluida entre los dos servicios estrella.
+5. **`BentoServices`**: Sección con encabezado estandarizado (`NUESTROS SERVICIOS` con `text-4xl md:text-5xl font-black uppercase tracking-tighter` y separador degradado neón). Diseño apilado vertical a ancho completo (Full Width Stack en 1 sola columna para móvil y escritorio `max-w-5xl mx-auto`), consolidado con precios directos (`#servicios` y `#precios`). Micro-diseño optimizado verticalmente: Título, Hook e Intro integrados de forma compacta (eliminando separaciones y paddings excesivos), imágenes de alta definición con márgenes reducidos (`py-2 sm:py-3`), y barra de botones de acción integrada directamente bajo la imagen. Orden estricto: 1º Combo "Mi Negocio en Internet" ($349.999 COP) y 2º Combo "Computador Como Nuevo" ($99.999 COP), precios destacados con animación intermitente neón y modal dinámico Cyberpunk (`selectedPlanForModal`) con Cero Layout Shift (CLS = 0).
 6. **`Timeline` ("Cómo Trabajamos")**: Sección de proceso de 4 pasos cronológicos (Contacto inicial, Diagnóstico y cotización clara, Ejecución y respaldo seguro, Entrega y soporte) con línea guía neón iluminada al hacer scroll.
-7. **`PricingTable`**: Tabla de precios detallada con bordes de color neón interactivos y desglose de características por servicio.
-8. **`FAQ`**: Acordeón dinámico con preguntas frecuentes (Tiempos de entrega, políticas de pago y cobertura de domicilios).
-9. **`ContactForm`**: Formulario interactivo conectado a EmailJS con validación y ventana emergente (*modal*) de agradecimiento.
-10. **`Footer`**: Datos oficiales de contacto, logo y redes de comunicación directa.
-11. **`FloatingWhatsApp`**: Botón flotante persistente en forma de píldora en la parte inferior izquierda con el logo oficial, el texto "WhatsApp", una sutil animación de pulso y un tooltip inteligente en hover.
-12. **`GlitchText`**: Utilidad tipográfica de estética cyberpunk reutilizada en títulos y marcas con variantes de glitch cíclico o reactivo a hover.
+7. **`FAQ`**: Acordeón dinámico con preguntas frecuentes (Tiempos de entrega, políticas de pago y cobertura de domicilios).
+8. **`ContactForm`**: Formulario interactivo conectado a EmailJS con validación y ventana emergente (*modal*) de agradecimiento.
+9. **`Footer`**: Datos oficiales de contacto, logo y redes de comunicación directa.
+10. **`FloatingWhatsApp`**: Botón flotante persistente en forma de píldora en la parte inferior izquierda con el logo oficial, el texto "WhatsApp", una sutil animación de pulso y un tooltip inteligente en hover.
+11. **`GlitchText`**: Utilidad tipográfica de estética cyberpunk reutilizada en títulos y marcas con variantes de glitch cíclico o reactivo a hover.
 
 ---
 

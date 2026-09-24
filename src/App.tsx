@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Menu, X, Mail, MessageSquare, Send, User, Phone, Info, ChevronLeft, ChevronRight, ShieldCheck, Zap, HeartHandshake, MessageCircle } from 'lucide-react';
+import { Check, Menu, X, Mail, MessageSquare, Send, User, Phone, Info, ChevronRight, ShieldCheck, Zap, HeartHandshake, MessageCircle } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import logo from './image/LogoSinInfo.webp';
@@ -45,25 +45,23 @@ const Header = () => {
                 >
                   <button
                     onClick={() => {
-                      const element = document.getElementById('servicios');
+                      const element = document.getElementById('servicio-webpro') || document.getElementById('servicios');
                       element?.scrollIntoView({ behavior: 'smooth' });
-                      window.dispatchEvent(new CustomEvent('changeService', { detail: 0 }));
                       setShowServices(false);
                     }}
-                    className="w-full text-left block p-3 hover:bg-[#ccff00]/10 rounded-xl hover:text-[#ccff00] transition-all"
+                    className="w-full text-left block p-3 hover:bg-[#00f2ff]/10 rounded-xl hover:text-[#00f2ff] transition-all cursor-pointer"
                   >
-                    Combo "Computador Como Nuevo"
+                    Combo "Mi Negocio en Internet" (Landing Page)
                   </button>
                   <button
                     onClick={() => {
-                      const element = document.getElementById('servicios');
+                      const element = document.getElementById('servicio-formateo') || document.getElementById('servicios');
                       element?.scrollIntoView({ behavior: 'smooth' });
-                      window.dispatchEvent(new CustomEvent('changeService', { detail: 1 }));
                       setShowServices(false);
                     }}
-                    className="w-full text-left block p-3 hover:bg-[#00f2ff]/10 rounded-xl hover:text-[#00f2ff] transition-all"
+                    className="w-full text-left block p-3 hover:bg-[#ccff00]/10 rounded-xl hover:text-[#ccff00] transition-all cursor-pointer"
                   >
-                    Combo "Mi Negocio en Internet" (Landing Page)
+                    Combo "Computador Como Nuevo"
                   </button>
                 </motion.div>
               )}
@@ -88,8 +86,8 @@ const Header = () => {
           <a href="#" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Inicio</a>
           <div className="flex flex-col gap-4 border-l-2 border-[#ccff00]/30 pl-4">
             <span className="text-gray-500 text-sm uppercase tracking-widest">Servicios</span>
-            <a href="#servicio-formateo" className="text-lg font-bold text-white hover:text-[#ccff00]" onClick={() => setIsOpen(false)}>Combo "Computador Como Nuevo"</a>
             <a href="#servicio-webpro" className="text-lg font-bold text-white hover:text-[#00f2ff]" onClick={() => setIsOpen(false)}>Combo "Mi Negocio en Internet"</a>
+            <a href="#servicio-formateo" className="text-lg font-bold text-white hover:text-[#ccff00]" onClick={() => setIsOpen(false)}>Combo "Computador Como Nuevo"</a>
           </div>
           <a href="#precios" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Precios</a>
           <a href="#faq" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Preguntas Frecuentes</a>
@@ -113,7 +111,7 @@ const RobustVideoCard = ({ src, poster }: { src: string; poster?: string }) => {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    
+
     const video = container.querySelector('video');
     if (!video) return;
 
@@ -132,7 +130,7 @@ const RobustVideoCard = ({ src, poster }: { src: string; poster?: string }) => {
         playPromise.catch(() => {
           // Si el navegador bloquea audio sin gesto previo, reproducir silenciado
           video.muted = true;
-          video.play().catch(() => {});
+          video.play().catch(() => { });
         });
       }
     };
@@ -164,7 +162,8 @@ const RobustVideoCard = ({ src, poster }: { src: string; poster?: string }) => {
 
   return (
     <div ref={containerRef} className="w-full h-full flex items-center justify-center cursor-pointer">
-      <div dangerouslySetInnerHTML={{ __html: `
+      <div dangerouslySetInnerHTML={{
+        __html: `
         <video 
           src="${src}" 
           poster="${resolvedPoster}"
@@ -226,9 +225,9 @@ const Hero = () => {
               style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
               className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
             >
-              <RobustVideoCard 
-                src="/videos/formateo.mp4" 
-                poster="/videos/formateo-poster.webp" 
+              <RobustVideoCard
+                src="/videos/formateo.mp4"
+                poster="/videos/formateo-poster.webp"
               />
             </motion.div>
           </div>
@@ -240,9 +239,9 @@ const Hero = () => {
               style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
               className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
             >
-              <RobustVideoCard 
-                src="/videos/paginasweb.mp4" 
-                poster="/videos/paginasweb-poster.webp" 
+              <RobustVideoCard
+                src="/videos/paginasweb.mp4"
+                poster="/videos/paginasweb-poster.webp"
               />
             </motion.div>
           </div>
@@ -323,147 +322,262 @@ const WhyUs = () => {
     </section>
   );
 };
+
 const BentoServices = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedPlanForModal, setSelectedPlanForModal] = useState<any | null>(null);
 
   useEffect(() => {
-    const handleServiceChange = (e: Event) => {
-      const customEvent = e as CustomEvent<number>;
-      setCurrentIndex(customEvent.detail);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedPlanForModal(null);
     };
-    window.addEventListener('changeService', handleServiceChange);
-    return () => window.removeEventListener('changeService', handleServiceChange);
-  }, []);
+    if (selectedPlanForModal) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [selectedPlanForModal]);
 
   const services = [
     {
-      id: "servicio-formateo",
-      priceId: "formateo-precio",
-      title: 'Combo "Computador Como Nuevo"',
-      image: comboFormateo,
-      color: "border-[#00f2ff]/30",
+      id: "servicio-webpro",
+      title: 'Combo "Mi Negocio en Internet" (Landing Page)',
+      image: comboLanding,
+      price: "$349.999 COP",
+      color: "border-[#ccff00]/30",
+      accentColor: "#ccff00",
+      badgeClass: "bg-[#ccff00]/10 border-[#ccff00]/30 text-[#ccff00] shadow-[0_0_15px_rgba(204,255,0,0.2)]",
+      priceHighlightClass: "bg-[#ccff00]/10 border-[#ccff00]/50 text-[#ccff00] shadow-[0_0_25px_rgba(204,255,0,0.4)] animate-pulse",
+      outlineBtnClass: "border-[#ccff00]/40 text-[#ccff00] hover:bg-[#ccff00]/10 shadow-[0_0_15px_rgba(204,255,0,0.15)]",
+      primaryBtnClass: "bg-[#ccff00] text-black hover:bg-[#ccff00]/90 shadow-[0_0_25px_rgba(204,255,0,0.35)]",
+      modalBorderClass: "border-[#ccff00]/40 shadow-[0_0_50px_rgba(204,255,0,0.25)]",
+      checkIconColor: "text-[#00f2ff]",
+      checkBgColor: "bg-[#00f2ff]/10",
       marketing: {
-        hook: "¿Sientes que tu computador está lento, se calienta o tiene mensajes raros?",
-        intro: "En JuanTech lo dejamos volando. Olvídate de los virus y las esperas eternas.",
-        benefits: [
-          { title: "Limpieza Total", desc: "Borramos todo lo malo (virus y basura) y reinstalamos el último Windows para que sea ultra rápido." },
-          { title: "Kit de Trabajo", desc: "Te entregamos Word, Excel y PowerPoint listos para usar." },
-          { title: "Programas a tu Gusto", desc: "¿Necesitas Zoom, Chrome, Photoshop o Spotify? Nosotros los dejamos instalados." },
-          { title: "Internet sin Fallas", desc: "Revisamos tu Wi-Fi para que no se te caiga la señal en mitad de una reunión o clase." }
+        hook: "¿Crees que una web es un lujo? Es tu mejor herramienta de ventas 24/7.",
+        intro: "Transformamos tu negocio físico en una máquina digital que vende en automático por WhatsApp."
+      },
+      planDetails: {
+        description: "Tu marca disponible en Google las 24 horas del día con diseño ultra rápido y alta conversión.",
+        features: [
+          { title: "Landing Page de Alto Impacto", desc: "Diseñamos una página moderna y profesional enfocada en que tus clientes te contacten de inmediato." },
+          { title: 'Diseño "Multi-Pantalla" (Responsive)', desc: "Tu sitio se verá perfecto y cargará ultra rápido en celulares, tablets y computadores." },
+          { title: "Posicionamiento SEO Local", desc: "Configuramos tu negocio para que aparezca en Google Maps y los vecinos de tu zona te encuentren primero." },
+          { title: "Todo Incluido (Hosting y Dominio)", desc: "Nos encargamos de tu dirección web (.com) y espacio en la nube por un año; cero preocupaciones técnicas." },
+          { title: 'Botón de WhatsApp "Oro"', desc: "Conectamos tu web a tu WhatsApp Business para que recibas pedidos y consultas al instante." },
+          { title: "Acompañamiento JuanTech", desc: "Incluimos 1 mes de mantenimiento y capacitación para gestionar tus nuevos clientes." }
         ],
-        ideal: 'Ideal si: "Tu PC se demora 10 minutos en prender", "Te salen anuncios raros" o "Quieres actualizarte al Windows más reciente".'
+        badges: [
+          { icon: <ShieldCheck className="w-4 h-4 text-[#ccff00]" />, text: "Soporte de 1 mes" },
+          { icon: <Zap className="w-4 h-4 text-[#ccff00]" />, text: "Servidores Rápidos" },
+          { icon: <HeartHandshake className="w-4 h-4 text-[#ccff00]" />, text: "Acompañamiento" }
+        ]
       }
     },
     {
-      id: "servicio-webpro",
-      priceId: "webpro-precio",
-      title: 'Combo "Mi Negocio en Internet" (Landing Page)',
-      image: comboLanding,
-      color: "border-[#ccff00]/30",
+      id: "servicio-formateo",
+      title: 'Combo "Computador Como Nuevo"',
+      image: comboFormateo,
+      price: "$99.999 COP",
+      color: "border-[#00f2ff]/30",
+      accentColor: "#00f2ff",
+      badgeClass: "bg-[#00f2ff]/10 border-[#00f2ff]/30 text-[#00f2ff] shadow-[0_0_15px_rgba(0,242,255,0.2)]",
+      priceHighlightClass: "bg-[#00f2ff]/10 border-[#00f2ff]/50 text-[#00f2ff] shadow-[0_0_25px_rgba(0,242,255,0.4)] animate-pulse",
+      outlineBtnClass: "border-[#00f2ff]/40 text-[#00f2ff] hover:bg-[#00f2ff]/10 shadow-[0_0_15px_rgba(0,242,255,0.15)]",
+      primaryBtnClass: "bg-[#00f2ff] text-black hover:bg-[#00f2ff]/90 shadow-[0_0_25px_rgba(0,242,255,0.35)]",
+      modalBorderClass: "border-[#00f2ff]/40 shadow-[0_0_50px_rgba(0,242,255,0.25)]",
+      checkIconColor: "text-[#ccff00]",
+      checkBgColor: "bg-[#ccff00]/10",
       marketing: {
-        hook: "¿Crees que una web es un lujo? Es tu mejor herramienta de ventas 24/7.",
-        intro: "Transformamos tu negocio físico en una máquina digital. Mira cómo ayudamos a otros:",
-        benefits: [
-          { title: "💇‍♀️ Salones & Barberías", desc: "Botón de citas directo a WhatsApp. No pierdas clientes por no contestar el teléfono." },
-          { title: "🍕 Restaurantes", desc: "Menú digital con QR. Recibe pedidos organizados sin gastar en menús físicos." },
-          { title: "🛍️ Almacenes", desc: "Ubicación en Maps y productos estrella. Que te encuentren antes que a la competencia." },
-          { title: "⚖️ Profesionales", desc: "Presentación premium y formulario. Da la confianza necesaria para cobrar lo que vales." }
+        hook: "¿Sientes que tu computador está lento, se calienta o tiene mensajes raros?",
+        intro: "En JuanTech lo dejamos volando. Olvídate de los virus y las esperas eternas."
+      },
+      planDetails: {
+        description: "La solución definitiva para que tu equipo recupere su velocidad original.",
+        features: [
+          { title: "Formateo y Limpieza Profunda", desc: "Eliminamos virus, archivos basura y errores del sistema para un inicio desde cero." },
+          { title: "Instalación del Sistema Operativo", desc: "Instalamos la versión más estable y reciente de Windows, configurada para el mejor rendimiento." },
+          { title: "Paquete de Drivers Inteligente", desc: "Actualizamos todos los controladores (audio, video, Wi-Fi) para que tus periféricos funcionen sin errores." },
+          { title: "Optimización de Velocidad Pro", desc: "Ajustamos los procesos internos del PC para que encienda en segundos y no se trabe al abrir programas." },
+          { title: "Microsoft Office y Programas", desc: "Dejamos listo Word, Excel, PowerPoint y las aplicaciones que necesites para tu día a día." },
+          { title: "Garantía de Confianza JuanTech", desc: "Cuentas con 15 días de soporte técnico post-servicio para resolver cualquier duda o ajuste adicional." }
         ],
-        ideal: 'Ideal para: Negocios que quieren dejar de ser "invisibles" en internet y empezar a vender por WhatsApp.'
+        badges: [
+          { icon: <ShieldCheck className="w-4 h-4 text-[#00f2ff]" />, text: "Garantía de 15 días" },
+          { icon: <Zap className="w-4 h-4 text-[#00f2ff]" />, text: "Atención Rápida" },
+          { icon: <ShieldCheck className="w-4 h-4 text-[#00f2ff]" />, text: "Datos 100% Seguros" }
+        ]
       }
     }
   ];
 
-  const next = () => setCurrentIndex((prev) => (prev + 1) % services.length);
-  const prev = () => setCurrentIndex((prev) => (prev - 1 + services.length) % services.length);
-
   return (
-    <section id="servicios" className="py-24 px-6 bg-[#0a0a0a] overflow-hidden">
+    <section id="servicios" className="py-24 px-6 bg-[#0a0a0a] overflow-hidden scroll-mt-20">
+      <div id="precios" className="scroll-mt-24" />
       <div className="max-w-5xl mx-auto text-center relative">
-        <h2 className="text-4xl md:text-5xl font-bold mb-16 text-white">Nuestros <span className="text-[#00f2ff]">Servicios</span></h2>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tighter">
+            NUESTROS <span className="text-[#00f2ff]">SERVICIOS</span>
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#00f2ff] to-[#ccff00] mx-auto rounded-full mb-6" />
+          <p className="text-gray-400 max-w-2xl mx-auto text-lg">Soluciones tecnológicas profesionales, ágiles y con precios transparentes sin costos ocultos.</p>
+        </div>
 
-        <div className="relative group px-12">
-          {/* Botones de Navegación */}
-          <button
-            onClick={prev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/5 hover:bg-[#ccff00] text-white hover:text-black rounded-full border border-white/10 transition-all"
-          >
-            <ChevronLeft className="w-8 h-8" />
-          </button>
-
-          <button
-            onClick={next}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/5 hover:bg-[#ccff00] text-white hover:text-black rounded-full border border-white/10 transition-all"
-          >
-            <ChevronRight className="w-8 h-8" />
-          </button>
-
-          <div className="relative min-h-[600px] md:min-h-[700px]">
-            <AnimatePresence mode="wait">
-              <motion.a
-                key={currentIndex}
-                id={services[currentIndex].id}
-                href={`#${services[currentIndex].priceId}`}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.4 }}
-                className="w-full h-full rounded-3xl border border-white/10 bg-[#111] text-left overflow-hidden hover:border-white/20 transition-all flex flex-col scroll-mt-24 shadow-2xl"
-              >
-                <div className="p-8 bg-[#111]">
-                  <h3 className="text-3xl font-black text-white">{services[currentIndex].title}</h3>
-                </div>
-
-                {services[currentIndex].marketing && (
-                  <div className="p-8 bg-[#151515] border-y border-white/5 space-y-6">
-                    <div className="space-y-2">
-                      <p className="text-[#ccff00] font-bold text-lg italic">{services[currentIndex].marketing.hook}</p>
-                      <p className="text-white text-base opacity-80">{services[currentIndex].marketing.intro}</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {services[currentIndex].marketing.benefits.map((b: { title: string; desc: string }, idx: number) => (
-                        <div key={idx} className="space-y-1">
-                          <p className="text-[#00f2ff] font-black text-sm uppercase tracking-wider">{b.title}</p>
-                          <p className="text-gray-400 text-sm leading-relaxed">{b.desc}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="pt-4 border-t border-white/5">
-                      <p className="text-gray-500 text-sm italic">{services[currentIndex].marketing.ideal}</p>
-                    </div>
+        {/* Stack Vertical a Ancho Completo (1 Columna en móvil y escritorio) */}
+        <div className="flex flex-col gap-12 md:gap-16 w-full max-w-5xl mx-auto items-center">
+          {services.map((service, index) => (
+            <motion.div
+              key={service.id}
+              id={service.id}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              className={`w-full rounded-3xl border ${service.color} bg-[#111] text-left overflow-hidden hover:border-white/20 transition-all flex flex-col scroll-mt-24 shadow-2xl`}
+            >
+              {/* Header de la Tarjeta con Título, Precio y Hook/Intro integrados de forma compacta */}
+              <div className="p-5 sm:p-6 md:px-8 md:py-6 bg-[#111] border-b border-white/5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                  <h3 className="text-2xl md:text-3xl font-black text-white tracking-tight">{service.title}</h3>
+                  <div className={`inline-flex items-center gap-2 px-4 py-1.5 sm:px-5 sm:py-2 rounded-2xl border font-mono font-black text-xl sm:text-2xl md:text-3xl tracking-tight self-start sm:self-auto shrink-0 transition-all ${service.priceHighlightClass}`}>
+                    {service.price}
                   </div>
-                )}
-
-                <div className="w-full flex-grow flex items-center justify-center bg-black/10 p-6">
-                  <img
-                    src={services[currentIndex].image}
-                    alt={services[currentIndex].title}
-                    className="max-h-[400px] md:max-h-[500px] w-auto object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
                 </div>
 
-                <div className="p-6 bg-black/40 text-center text-[#00f2ff] font-bold text-sm tracking-widest">
-                  HAZ CLIC PARA VER PRECIOS
+                {/* Hook y Texto Intro con espaciado mínimo directo */}
+                <div className="space-y-1">
+                  <p className="text-[#ccff00] font-bold text-base md:text-lg italic leading-snug">{service.marketing.hook}</p>
+                  <p className="text-white text-sm md:text-base opacity-85 leading-relaxed">{service.marketing.intro}</p>
                 </div>
-              </motion.a>
-            </AnimatePresence>
-          </div>
+              </div>
 
-          {/* Indicadores de puntos */}
-          <div className="flex justify-center gap-2 mt-8">
-            {services.map((_, i) => (
-              <div
-                key={i}
-                className={`w-3 h-3 rounded-full transition-all ${i === currentIndex ? 'bg-[#ccff00] w-8' : 'bg-white/20'}`}
-              />
-            ))}
-          </div>
+              {/* Imagen del Servicio Ampliada (Compactada verticalmente para fluir sin huecos) */}
+              <div className="w-full flex items-center justify-center bg-black/20 px-4 py-2 sm:px-6 sm:py-3 overflow-hidden">
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="max-h-[380px] sm:max-h-[480px] md:max-h-[580px] w-auto max-w-full object-contain transition-transform duration-500 hover:scale-[1.01] drop-shadow-[0_15px_30px_rgba(0,0,0,0.6)]"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              {/* Acciones y Llamadas a la Acción directas e integradas bajo la imagen */}
+              <div className="px-5 py-3 sm:px-8 sm:py-4 bg-black/40 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSelectedPlanForModal(service)}
+                  className={`w-full sm:w-auto px-5 py-3 rounded-xl border font-bold text-sm md:text-base tracking-wide transition-all hover:scale-105 flex items-center justify-center gap-2 cursor-pointer ${service.outlineBtnClass}`}
+                >
+                  <Info className="w-5 h-5" />
+                  Ver detalles del plan
+                </button>
+                <a
+                  href="#contacto"
+                  className={`w-full sm:w-auto px-7 py-3 rounded-xl font-black text-sm md:text-base tracking-wide transition-all hover:scale-105 text-center ${service.primaryBtnClass}`}
+                >
+                  Solicitar Servicio
+                </a>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
+
+      {/* Modal Cyberpunk Dinámico para Detalles del Plan */}
+      <AnimatePresence>
+        {selectedPlanForModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedPlanForModal(null)}
+              className="absolute inset-0 cursor-pointer"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className={`relative z-10 w-full max-w-2xl bg-[#111111] border-2 ${selectedPlanForModal.modalBorderClass} rounded-3xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto text-left`}
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              {/* Header Modal */}
+              <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-6 mb-6">
+                <div>
+                  <span className={`inline-block py-1 px-3 rounded-full border text-xs font-mono font-bold uppercase tracking-wider mb-2 ${selectedPlanForModal.badgeClass}`}>
+                    Detalles del Plan
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight">
+                    {selectedPlanForModal.title}
+                  </h3>
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                      {selectedPlanForModal.price.split(' ')[0]}
+                    </span>
+                    <span className="text-sm font-bold uppercase tracking-wider" style={{ color: selectedPlanForModal.accentColor }}>
+                      COP
+                    </span>
+                  </div>
+                  <p className="text-gray-400 text-base sm:text-lg mt-3">
+                    {selectedPlanForModal.planDetails.description}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setSelectedPlanForModal(null)}
+                  className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all flex-shrink-0 cursor-pointer"
+                  aria-label="Cerrar modal"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Lista de características completas */}
+              <div className="grid grid-cols-1 gap-4 mb-6">
+                {selectedPlanForModal.planDetails.features.map((feature: { title: string; desc: string }, i: number) => (
+                  <div key={i} className="flex items-start gap-4 bg-white/5 p-4 sm:p-5 rounded-2xl border border-white/5">
+                    <div className={`flex-shrink-0 w-7 h-7 rounded-full ${selectedPlanForModal.checkBgColor} flex items-center justify-center mt-1`}>
+                      <Check className={`w-4 h-4 ${selectedPlanForModal.checkIconColor}`} />
+                    </div>
+                    <div>
+                      <p className="font-black text-base sm:text-lg uppercase tracking-tight mb-1" style={{ color: selectedPlanForModal.accentColor }}>
+                        {feature.title}
+                      </p>
+                      <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        {feature.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Insignias de confianza */}
+              <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+                {selectedPlanForModal.planDetails.badges.map((badge: { icon: React.ReactNode; text: string }, idx: number) => (
+                  <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-300">
+                    {badge.icon}
+                    {badge.text}
+                  </div>
+                ))}
+              </div>
+
+              {/* Botón CTA en Modal */}
+              <a
+                href="#contacto"
+                onClick={() => setSelectedPlanForModal(null)}
+                className={`w-full py-4 rounded-2xl font-black text-center text-lg transition-all hover:scale-[1.02] shadow-xl flex items-center justify-center gap-2 cursor-pointer ${selectedPlanForModal.primaryBtnClass}`}
+              >
+                Solicitar Servicio ({selectedPlanForModal.price})
+              </a>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
@@ -646,126 +760,6 @@ const Timeline = () => {
   );
 };
 
-// --- PricingTable Component ---
-const PricingTable = () => {
-  const plans = [
-    {
-      id: "formateo-precio",
-      name: 'Combo "Computador Como Nuevo"',
-      price: "$99.999",
-      description: "La solución definitiva para que tu equipo recupere su velocidad original.",
-      features: [
-        { title: "Formateo y Limpieza Profunda", desc: "Eliminamos virus, archivos basura y errores del sistema para un inicio desde cero." },
-        { title: "Instalación del Sistema Operativo", desc: "Instalamos la versión más estable y reciente de Windows, configurada para el mejor rendimiento." },
-        { title: "Paquete de Drivers Inteligente", desc: "Actualizamos todos los controladores (audio, video, Wi-Fi) para que tus periféricos funcionen sin errores." },
-        { title: "Optimización de Velocidad Pro", desc: "Ajustamos los procesos internos del PC para que encienda en segundos y no se trabe al abrir programas." },
-        { title: "Microsoft Office y Programas", desc: "Dejamos listo Word, Excel, PowerPoint y las aplicaciones que necesites para tu día a día." },
-        { title: "Garantía de Confianza JuanTech", desc: "Cuentas con 15 días de soporte técnico post-servicio para resolver cualquier duda o ajuste adicional." }
-      ],
-      color: "border-[#00f2ff] glow-cyan",
-      button: "bg-[#00f2ff] text-black",
-      badges: [
-        { icon: <ShieldCheck className="w-4 h-4 text-[#00f2ff]" />, text: "Garantía de 15 días" },
-        { icon: <Zap className="w-4 h-4 text-[#00f2ff]" />, text: "Atención Rápida" },
-        { icon: <ShieldCheck className="w-4 h-4 text-[#00f2ff]" />, text: "Datos 100% Seguros" }
-      ]
-    },
-    {
-      id: "webpro-precio",
-      name: 'Combo "Mi Negocio en Internet" (Landing Page)',
-      price: "$349.999",
-      description: "Tu marca disponible en Google las 24 horas del día.",
-      features: [
-        { title: "Landing Page de Alto Impacto", desc: "Diseñamos una página moderna y profesional enfocada en que tus clientes te contacten de inmediato." },
-        { title: 'Diseño "Multi-Pantalla" (Responsive)', desc: "Tu sitio se verá perfecto y cargará ultra rápido en celulares, tablets y computadores." },
-        { title: "Posicionamiento SEO Local", desc: "Configuramos tu negocio para que aparezca en Google Maps y los vecinos de tu zona te encuentren primero." },
-        { title: "Todo Incluido (Hosting y Dominio)", desc: "Nos encargamos de tu dirección web (.com) y espacio en la nube por un año; cero preocupaciones técnicas." },
-        { title: 'Botón de WhatsApp "Oro"', desc: "Conectamos tu web a tu WhatsApp Business para que recibas pedidos y consultas al instante." },
-        { title: "Acompañamiento JuanTech", desc: "Incluimos 1 mes de mantenimiento y capacitación para gestionar tus nuevos clientes." }
-      ],
-      color: "border-[#ccff00] glow-lime",
-      button: "bg-[#ccff00] text-black",
-      badges: [
-        { icon: <ShieldCheck className="w-4 h-4 text-[#ccff00]" />, text: "Soporte de 1 mes" },
-        { icon: <Zap className="w-4 h-4 text-[#ccff00]" />, text: "Servidores Rápidos" },
-        { icon: <HeartHandshake className="w-4 h-4 text-[#ccff00]" />, text: "Acompañamiento" }
-      ]
-    }
-  ];
-
-  return (
-    <section id="precios" className="py-24 px-6 bg-[#0a0a0a]">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-            PLANES DE <span className="text-[#ccff00]">ÉXITO</span>
-          </h2>
-          <p className="text-gray-400">Selecciona el servicio que impulsará tu tecnología.</p>
-        </div>
-
-        <div className="grid grid-cols-1 gap-12 max-w-3xl mx-auto">
-          {plans.map((plan, index) => (
-            <motion.div
-              key={index}
-              id={plan.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className={`relative p-8 md:p-12 rounded-3xl border-2 ${plan.color} transition-all duration-500 flex flex-col bg-[#111] scroll-mt-24 shadow-2xl`}
-            >
-              <div className="mb-8">
-                <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">{plan.name}</h3>
-                <div className="flex items-baseline gap-2 mb-6">
-                  <span className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">{plan.price}</span>
-                </div>
-                <p className="text-gray-400 text-xl leading-relaxed">{plan.description}</p>
-              </div>
-
-              <div className="grid grid-cols-1 gap-6 mb-10">
-                {plan.features.map((feature: { title: string; desc?: string } | string, i: number) => {
-                  const title = typeof feature === 'string' ? feature : feature.title;
-                  const desc = typeof feature === 'string' ? undefined : feature.desc;
-                  return (
-                    <div key={i} className="flex items-start gap-4 bg-white/5 p-6 rounded-2xl border border-white/5">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-[#ccff00]/10 flex items-center justify-center mt-1">
-                        <Check className="w-5 h-5 text-[#ccff00]" />
-                      </div>
-                      <div>
-                        <p className="text-[#00f2ff] font-black text-lg uppercase tracking-tight mb-1">
-                          {title}
-                        </p>
-                        {desc && (
-                          <p className="text-gray-400 text-base leading-relaxed">
-                            {desc}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-center gap-3 mb-6 mt-2">
-                {plan.badges.map((badge: { icon: React.ReactNode; text: string }, idx: number) => (
-                  <div key={idx} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-gray-300">
-                    {badge.icon}
-                    {badge.text}
-                  </div>
-                ))}
-              </div>
-
-              <a
-                href="#contacto"
-                className={`w-full py-5 rounded-2xl font-black text-center text-xl transition-all duration-300 ${plan.button} hover:scale-105 shadow-xl`}
-              >
-                Solicitar Servicio
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 // --- ContactForm Component ---
 const ContactForm = () => {
@@ -794,9 +788,10 @@ const ContactForm = () => {
     <section id="contacto" className="py-24 px-6 bg-[#0a0a0a] relative">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tighter">
             CUÉNTANOS TU <span className="text-[#00f2ff]">PROYECTO</span>
           </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#00f2ff] to-[#ccff00] mx-auto rounded-full mb-6" />
           <p className="text-gray-400 text-lg">Elige la opción que prefieras para comunicarte con nosotros.</p>
         </div>
 
@@ -1091,9 +1086,10 @@ const FAQ = () => {
     <section id="faq" className="py-24 px-6 bg-[#050505]">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-6 uppercase tracking-tighter">
             PREGUNTAS <span className="text-[#00f2ff]">FRECUENTES</span>
           </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-[#00f2ff] to-[#ccff00] mx-auto rounded-full mb-6" />
           <p className="text-gray-400">Resolvemos tus dudas en segundos.</p>
         </div>
 
@@ -1212,7 +1208,7 @@ const ParticleTrail = () => {
       draw() {
         if (!ctx) return;
         const currentAlpha = Math.max(0, this.life);
-        
+
         // Halo suave exterior sin sobrecargar el pipeline gráfico
         ctx.fillStyle = this.color.replace('0.8', (currentAlpha * 0.25).toString());
         ctx.beginPath();
@@ -1230,7 +1226,7 @@ const ParticleTrail = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      
+
       // Mover el cursor directamente en la GPU sin disparar re-renderizados de React
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(${e.clientX - 16}px, ${e.clientY - 16}px, 0)`;
@@ -1245,7 +1241,7 @@ const ParticleTrail = () => {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (!cursorRef.current) return;
-      
+
       if (
         target.tagName.toLowerCase() === 'a' ||
         target.tagName.toLowerCase() === 'button' ||
@@ -1362,7 +1358,6 @@ function App() {
         <WhyUs />
         <BentoServices />
         <Timeline />
-        <PricingTable />
         <FAQ />
         <ContactForm />
       </main>
