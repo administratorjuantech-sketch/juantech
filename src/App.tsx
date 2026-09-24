@@ -118,25 +118,18 @@ const RobustVideoCard = ({ src }: { src: string }) => {
 
     video.defaultMuted = true;
     video.muted = true;
-    
-    const attemptPlay = () => {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {});
-      }
-    };
-    
-    if (video.readyState >= 2) {
-      attemptPlay();
-    } else {
-      video.addEventListener('loadeddata', attemptPlay, { once: true });
-    }
+    video.pause();
+
+    let isHovered = false;
 
     const handleEnter = () => {
+      if (isHovered) return;
+      isHovered = true;
       video.muted = false;
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
+          // Si el navegador bloquea audio sin gesto previo, reproducir silenciado
           video.muted = true;
           video.play().catch(() => {});
         });
@@ -144,30 +137,40 @@ const RobustVideoCard = ({ src }: { src: string }) => {
     };
 
     const handleLeave = () => {
+      isHovered = false;
+      video.pause();
       video.muted = true;
+    };
+
+    const handleToggle = () => {
+      if (video.paused) {
+        handleEnter();
+      } else {
+        handleLeave();
+      }
     };
 
     container.addEventListener('mouseenter', handleEnter);
     container.addEventListener('mouseleave', handleLeave);
+    container.addEventListener('click', handleToggle);
 
     return () => {
-      video.removeEventListener('loadeddata', attemptPlay);
       container.removeEventListener('mouseenter', handleEnter);
       container.removeEventListener('mouseleave', handleLeave);
+      container.removeEventListener('click', handleToggle);
     };
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full h-full flex items-center justify-center">
+    <div ref={containerRef} className="w-full h-full flex items-center justify-center cursor-pointer">
       <div dangerouslySetInnerHTML={{ __html: `
         <video 
           src="${src}" 
-          autoplay 
           loop 
           muted 
           playsinline 
           webkit-playsinline="true"
-          preload="metadata" 
+          preload="auto" 
           style="width: 100%; height: auto; border-radius: 0.75rem; object-fit: contain; transform: translateZ(0);"
         ></video>
       `}} className="w-full" />
@@ -1152,8 +1155,7 @@ const FloatingWhatsApp = () => {
 // --- Particle Trail & Cursor Component ---
 const ParticleTrail = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
-  const [isHovering, setIsHovering] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Only run particle loop on desktop / tablet screens (>= 768px), preventing mobile battery drain
@@ -1201,21 +1203,32 @@ const ParticleTrail = () => {
 
       draw() {
         if (!ctx) return;
-        ctx.fillStyle = this.color.replace('0.8', Math.max(0, this.life).toString());
+        const currentAlpha = Math.max(0, this.life);
+        
+        // Halo suave exterior sin sobrecargar el pipeline gráfico
+        ctx.fillStyle = this.color.replace('0.8', (currentAlpha * 0.25).toString());
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Núcleo brillante
+        ctx.fillStyle = this.color.replace('0.8', currentAlpha.toString());
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = this.color;
       }
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      
+      // Mover el cursor directamente en la GPU sin disparar re-renderizados de React
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${e.clientX - 16}px, ${e.clientY - 16}px, 0)`;
+      }
 
-      // Generar 2 partículas por cada movimiento de ratón
+      // Generar partículas sutiles
       for (let i = 0; i < 2; i++) {
         particlesArray.push(new Particle());
       }
@@ -1223,15 +1236,19 @@ const ParticleTrail = () => {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+      if (!cursorRef.current) return;
+      
       if (
         target.tagName.toLowerCase() === 'a' ||
         target.tagName.toLowerCase() === 'button' ||
         target.closest('a') ||
         target.closest('button')
       ) {
-        setIsHovering(true);
+        cursorRef.current.style.transform = `translate3d(${mouse.x - 16}px, ${mouse.y - 16}px, 0) scale(2)`;
+        cursorRef.current.style.backgroundColor = 'rgba(204, 255, 0, 0.4)';
       } else {
-        setIsHovering(false);
+        cursorRef.current.style.transform = `translate3d(${mouse.x - 16}px, ${mouse.y - 16}px, 0) scale(1)`;
+        cursorRef.current.style.backgroundColor = 'rgba(0, 242, 255, 0.4)';
       }
     };
 
@@ -1241,8 +1258,8 @@ const ParticleTrail = () => {
       canvas.height = window.innerHeight;
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
     window.addEventListener('resize', handleResize);
 
     let animationFrameId: number;
@@ -1276,23 +1293,16 @@ const ParticleTrail = () => {
         ref={canvasRef}
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9998] hidden md:block"
       />
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-screen hidden md:block"
-        animate={{
-          x: mousePosition.x - 16,
-          y: mousePosition.y - 16,
-          scale: isHovering ? 2 : 1,
-          backgroundColor: isHovering ? 'rgba(204, 255, 0, 0.4)' : 'rgba(0, 242, 255, 0.4)',
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 150,
-          damping: 15,
-          mass: 0.1
+      <div
+        ref={cursorRef}
+        className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-screen hidden md:block will-change-transform transition-[background-color,scale] duration-150"
+        style={{
+          transform: 'translate3d(-100px, -100px, 0)',
+          backgroundColor: 'rgba(0, 242, 255, 0.4)',
         }}
       >
         <div className="w-full h-full rounded-full blur-[8px]" />
-      </motion.div>
+      </div>
     </>
   );
 };
