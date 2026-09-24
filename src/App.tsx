@@ -892,7 +892,7 @@ const ContactForm = () => {
               />
             </div>
 
-            <input type="hidden" name="to_email" value="administrator.juantech@gmail.com" />
+            <input type="hidden" name="to_email" value="administrator@juantech.com.co" />
 
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -1013,8 +1013,8 @@ const Footer = () => (
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest text-gray-600 font-bold">Correo</p>
-            <a href="mailto:administrator.juantech@gmail.com" className="text-white hover:text-[#00f2ff] transition-colors">
-              administrator.juantech@gmail.com
+            <a href="mailto:administrator@juantech.com.co" className="text-white hover:text-[#00f2ff] transition-colors">
+              administrator@juantech.com.co
             </a>
           </div>
         </div>

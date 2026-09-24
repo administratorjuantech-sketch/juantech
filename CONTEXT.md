@@ -70,7 +70,7 @@ El archivo principal contiene una estructura modular por componentes autoconteni
 ## 🔐 6. Datos de Contacto e Integraciones
 
 ### Enlaces de Mensajería y Soporte:
-* **Email de la administración:** `administrator.juantech@gmail.com`
+* **Email de la administración:** `administrator@juantech.com.co`
 * **Enlace directo a WhatsApp:** `https://wa.me/573223471364` (Número: `+57 322 347 1364`)
 * **Página oficial de Facebook:** `https://facebook.com/juantech.com.co`
 
@@ -78,7 +78,7 @@ El archivo principal contiene una estructura modular por componentes autoconteni
 * **Service ID:** `service_or7glb8`
 * **Template ID:** `template_vg59wyk`
 * **Public Key:** `OglbpUuVnZu0BjLXF`
-* **Campo oculto del destinatario:** `to_email` = `administrator.juantech@gmail.com`
+* **Campo oculto del destinatario:** `to_email` = `administrator@juantech.com.co`
 
 ---
 
