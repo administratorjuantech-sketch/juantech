@@ -106,8 +106,9 @@ const Header = () => {
 };
 
 // --- RobustVideoCard Component ---
-const RobustVideoCard = ({ src }: { src: string }) => {
+const RobustVideoCard = ({ src, poster }: { src: string; poster?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const resolvedPoster = poster || src.replace(/\.mp4$/i, '-poster.webp');
 
   useEffect(() => {
     const container = containerRef.current;
@@ -166,6 +167,7 @@ const RobustVideoCard = ({ src }: { src: string }) => {
       <div dangerouslySetInnerHTML={{ __html: `
         <video 
           src="${src}" 
+          poster="${resolvedPoster}"
           loop 
           muted 
           playsinline 
@@ -224,7 +226,10 @@ const Hero = () => {
               style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
               className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
             >
-              <RobustVideoCard src="/videos/formateo.mp4" />
+              <RobustVideoCard 
+                src="/videos/formateo.mp4" 
+                poster="/videos/formateo-poster.webp" 
+              />
             </motion.div>
           </div>
 
@@ -235,7 +240,10 @@ const Hero = () => {
               style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
               className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
             >
-              <RobustVideoCard src="/videos/paginasweb.mp4" />
+              <RobustVideoCard 
+                src="/videos/paginasweb.mp4" 
+                poster="/videos/paginasweb-poster.webp" 
+              />
             </motion.div>
           </div>
         </div>
