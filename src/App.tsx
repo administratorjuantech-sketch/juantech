@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Menu, X, Mail, MessageSquare, Send, User, Phone, Info, ChevronRight, ShieldCheck, Zap, HeartHandshake, MessageCircle } from 'lucide-react';
+import { Check, Menu, X, Mail, MessageSquare, Send, User, Phone, Info, ChevronRight, ShieldCheck, Zap, HeartHandshake, MessageCircle, Globe, Laptop, ArrowRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import logo from './image/LogoSinInfo.webp';
@@ -68,7 +68,6 @@ const Header = () => {
             </AnimatePresence>
           </div>
 
-          <a href="#precios" className="hover:text-[#ccff00] transition-colors">Precios</a>
           <a href="#faq" className="hover:text-[#ccff00] transition-colors whitespace-nowrap">Preguntas Frecuentes</a>
           <a href="#nosotros" className="hover:text-[#ccff00] transition-colors">¿Por qué nosotros?</a>
           <a href="#contacto" className="hover:text-[#ccff00] transition-colors">Contacto</a>
@@ -89,7 +88,6 @@ const Header = () => {
             <a href="#servicio-webpro" className="text-lg font-bold text-white hover:text-[#00f2ff]" onClick={() => setIsOpen(false)}>Combo "Mi Negocio en Internet"</a>
             <a href="#servicio-formateo" className="text-lg font-bold text-white hover:text-[#ccff00]" onClick={() => setIsOpen(false)}>Combo "Computador Como Nuevo"</a>
           </div>
-          <a href="#precios" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Precios</a>
           <a href="#faq" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Preguntas Frecuentes</a>
           <a href="#nosotros" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>¿Por qué nosotros?</a>
           <a href="#contacto" className="text-xl font-bold text-white" onClick={() => setIsOpen(false)}>Contacto</a>
@@ -103,158 +101,152 @@ const Header = () => {
   );
 };
 
-// --- RobustVideoCard Component ---
-const RobustVideoCard = ({ src, poster }: { src: string; poster?: string }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const resolvedPoster = poster || src.replace(/\.mp4$/i, '-poster.webp');
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const video = container.querySelector('video');
-    if (!video) return;
-
-    video.defaultMuted = true;
-    video.muted = true;
-    video.pause();
-
-    let isHovered = false;
-
-    const handleEnter = () => {
-      if (isHovered) return;
-      isHovered = true;
-      video.muted = false;
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Si el navegador bloquea audio sin gesto previo, reproducir silenciado
-          video.muted = true;
-          video.play().catch(() => { });
-        });
-      }
-    };
-
-    const handleLeave = () => {
-      isHovered = false;
-      video.pause();
-      video.muted = true;
-    };
-
-    const handleToggle = () => {
-      if (video.paused) {
-        handleEnter();
-      } else {
-        handleLeave();
-      }
-    };
-
-    container.addEventListener('mouseenter', handleEnter);
-    container.addEventListener('mouseleave', handleLeave);
-    container.addEventListener('click', handleToggle);
-
-    return () => {
-      container.removeEventListener('mouseenter', handleEnter);
-      container.removeEventListener('mouseleave', handleLeave);
-      container.removeEventListener('click', handleToggle);
-    };
-  }, []);
-
-  return (
-    <div ref={containerRef} className="w-full h-full flex items-center justify-center cursor-pointer">
-      <div dangerouslySetInnerHTML={{
-        __html: `
-        <video 
-          src="${src}" 
-          poster="${resolvedPoster}"
-          loop 
-          muted 
-          playsinline 
-          webkit-playsinline="true"
-          preload="auto" 
-          style="width: 100%; height: auto; border-radius: 0.75rem; object-fit: contain; transform: translateZ(0);"
-        ></video>
-      `}} className="w-full" />
-    </div>
-  );
-};
 
 // --- Hero Component ---
 const Hero = () => {
+  const serviceHighlights = [
+    {
+      title: "Landing Pages Premium",
+      badge: "Alta Conversión",
+      desc: "Diseño ultra rápido y adaptable a celulares, tablets y PC para captar clientes.",
+      icon: <Globe className="w-5 h-5 text-[#00f2ff]" />,
+      link: "#servicio-webpro",
+      accent: "hover:border-[#00f2ff]/40",
+      accentGlow: "group-hover:shadow-[0_0_25px_rgba(0,242,255,0.15)]",
+    },
+    {
+      title: "Formateo de Computadores",
+      badge: "Como Nuevo",
+      desc: "Limpieza profunda, Instalación de Windows, Office, Programas básicos.",
+      icon: <Laptop className="w-5 h-5 text-[#ccff00]" />,
+      link: "#servicio-formateo",
+      accent: "hover:border-[#ccff00]/40",
+      accentGlow: "group-hover:shadow-[0_0_25px_rgba(204,255,0,0.15)]",
+    },
+  ];
+
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0a0a0a] pt-20 pb-10">
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3], x: [0, 50, 0], y: [0, -50, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/4 -left-20 w-72 h-72 bg-[#00f2ff]/10 rounded-full blur-[120px] pointer-events-none"
-        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
-      />
-      <motion.div
-        animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2], x: [0, -50, 0], y: [0, 50, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        className="absolute bottom-1/4 -right-20 w-72 h-72 bg-[#ccff00]/10 rounded-full blur-[120px] pointer-events-none"
-        style={{ transform: 'translateZ(0)', willChange: 'transform, opacity' }}
-      />
-      <div className="container mx-auto px-6 relative z-10 flex flex-col items-center justify-center text-center w-full">
-        {/* Top Section */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="flex flex-col items-center w-full max-w-4xl mx-auto">
-          <span className="inline-block py-1 px-4 rounded-full border border-[#00f2ff]/30 text-[#00f2ff] text-sm font-medium mb-6">
-            Tecnología al Siguiente Nivel
+    <section className="relative overflow-hidden bg-[#0a0a0a] pt-24 pb-12 md:pt-28 md:pb-16 flex flex-col items-center justify-center">
+      {/* 1. Fondo de Vídeo en Marca de Agua (Hero Background Video) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/videos/FondoVideoIndex-poster.jpg"
+          preload="auto"
+          className="w-full h-full object-cover object-center pointer-events-none select-none opacity-100"
+        >
+          <source src="/videos/FondoVideoIndex.mp4" type="video/mp4" />
+        </video>
+
+        {/* Capa Overlay ultra-ligera (20% de oscuridad, sin desenfoque) para máxima nitidez y presencia del vídeo */}
+        <div className="absolute inset-0 bg-[#0a0a0a]/20" />
+
+        {/* Degradados sutiles únicamente en los bordes extremos (superior para navbar, inferior para transición) */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-transparent via-25% to-[#0a0a0a]" />
+      </div>
+
+      {/* 2. Contenido Principal */}
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 flex flex-col items-center justify-center text-center w-full max-w-6xl">
+        {/* Badge Minimalista */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mb-6 hover:border-white/20 transition-colors"
+        >
+          <span className="w-2 h-2 rounded-full bg-[#ccff00] animate-pulse" />
+          <span className="text-xs sm:text-sm font-medium tracking-wide text-gray-300">
+            Soluciones Tecnológicas & Desarrollo Web en Colombia
           </span>
-          <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-6 leading-tight uppercase flex flex-col items-center">
-            <GlitchText text="TECNOLOGÍA QUE" autoGlitch={true} />
-            <GlitchText
-              text="IMPULSA TU VIDA Y TU NEGOCIO"
-              autoGlitch={true}
-              className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f2ff] to-[#ccff00]"
-              textClassName="bg-clip-text bg-gradient-to-r from-[#00f2ff] to-[#ccff00] text-transparent"
-            />
-          </h1>
-          <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl leading-relaxed font-medium">
-            Servicio técnico profesional y soluciones web en Bogotá y Colombia. <br className="hidden md:block" />
-            Sin complicaciones, sin lenguaje enredado y con resultados garantizados.
-          </p>
         </motion.div>
 
-        {/* Middle Section (The Animations) */}
-        <div className="flex flex-col md:flex-row gap-8 justify-center items-center my-10 w-full max-w-5xl mx-auto">
-          {/* Card 1 */}
-          <div className="w-full md:w-1/2 max-w-md">
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
-              className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
-            >
-              <RobustVideoCard
-                src="/videos/formateo.mp4"
-                poster="/videos/formateo-poster.webp"
-              />
-            </motion.div>
-          </div>
+        {/* Título Principal Limpio (Estilo Apple/Vercel) */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.12] mb-6 max-w-5xl drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
+        >
+          Tecnología y Soluciones Digitales que{" "}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00f2ff] via-[#b4ff39] to-[#ccff00]">
+            Impulsan tu Crecimiento
+          </span>
+        </motion.h1>
 
-          {/* Card 2 */}
-          <div className="w-full md:w-1/2 max-w-md">
-            <motion.div
-              whileHover={{ scale: 1.03 }}
-              style={{ transformStyle: "preserve-3d", WebkitTransformStyle: "preserve-3d" }}
-              className="bg-[#111111] p-4 rounded-2xl border-2 border-[#ccff00] shadow-[0_0_35px_rgba(204,255,0,0.4)] overflow-hidden"
-            >
-              <RobustVideoCard
-                src="/videos/paginasweb.mp4"
-                poster="/videos/paginasweb-poster.webp"
-              />
-            </motion.div>
-          </div>
-        </div>
+        {/* Subtítulo / Propuesta de Valor */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          className="text-gray-200 text-base sm:text-lg md:text-xl leading-relaxed max-w-3xl mb-8 font-normal drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]"
+        >
+          Diseño web de alto impacto y servicio técnico especializado en Bogotá y Colombia. Sin complicaciones ni tecnicismos enredados, con total transparencia y resultados medibles.
+        </motion.p>
 
-        {/* Bottom Section (Actions) */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full mt-2">
-          <a href="#servicios" className="px-8 py-4 bg-[#00f2ff] text-black font-bold rounded-xl w-full sm:w-auto text-center hover:scale-105 transition-all">
-            Comenzar Ahora
+        {/* Botones CTA Modernos con Efecto Hover Fluido */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-10"
+        >
+          <a
+            href="https://wa.me/573223471364?text=Hola%20JuanTech,%20quiero%20cotizar%20un%20proyecto%20para%20mi%20negocio."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl font-bold text-sm sm:text-base text-black bg-[#ccff00] hover:bg-[#d8ff33] transition-all duration-300 shadow-[0_0_20px_rgba(204,255,0,0.3)] hover:shadow-[0_0_30px_rgba(204,255,0,0.5)] hover:-translate-y-0.5 active:translate-y-0"
+          >
+            <span>Cotizar Proyecto</span>
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
-          <a href="#contacto" className="px-8 py-4 bg-transparent border border-white/20 text-white font-bold rounded-xl w-full sm:w-auto flex items-center justify-center hover:bg-white/5 transition-all">
-            Contáctanos
+
+          <a
+            href="#servicios"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-medium text-sm sm:text-base text-white bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 hover:border-white/20 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 group"
+          >
+            <span>Nuestros Servicios</span>
+            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
           </a>
+        </motion.div>
+
+        {/* Grilla de Servicios Clave Representados */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl text-left"
+        >
+          {serviceHighlights.map((item, idx) => (
+            <a
+              key={idx}
+              href={item.link}
+              className={`group relative p-5 rounded-2xl bg-[#111111]/75 hover:bg-[#151515]/95 border border-white/5 ${item.accent} backdrop-blur-md transition-all duration-300 flex flex-col justify-between ${item.accentGlow} hover:-translate-y-1`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/5 group-hover:scale-105 transition-transform duration-300">
+                    {item.icon}
+                  </div>
+                  <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/5">
+                    {item.badge}
+                  </span>
+                </div>
+                <h3 className="text-white font-bold text-base mb-1.5 group-hover:text-white transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-white/5 flex items-center text-xs font-semibold text-gray-400 group-hover:text-[#00f2ff] transition-colors">
+                <span>Ver detalles</span>
+                <ChevronRight className="w-3.5 h-3.5 ml-1 transition-transform duration-300 group-hover:translate-x-0.5" />
+              </div>
+            </a>
+          ))}
         </motion.div>
       </div>
     </section>
